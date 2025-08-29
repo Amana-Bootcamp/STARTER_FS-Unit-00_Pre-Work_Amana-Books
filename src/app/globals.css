@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap");
 
 /* Override dark mode to ensure light theme */
 @media (prefers-color-scheme: dark) {
@@ -8,6 +9,9 @@
 }
 
 /* Ensure light background without conflicting with Tailwind */
-html {
+html,
+body {
   background-color: #f9fafb;
+  font-family: "Playfair Display", serif !important;
+  color-scheme: light;
 }
