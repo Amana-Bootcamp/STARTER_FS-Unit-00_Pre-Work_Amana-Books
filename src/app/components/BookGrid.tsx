@@ -1,11 +1,11 @@
 // src/app/components/BookGrid.tsx
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import { Book } from '../types';
-import BookCard from './BookCard';
-import BookListItem from './BookListItem';
-import Pagination from './Pagination';
+import React, { useState, useMemo } from "react";
+import { Book } from "../types";
+import BookCard from "./BookCard";
+import BookListItem from "./BookListItem";
+import Pagination from "./Pagination";
 
 interface BookGridProps {
   books: Book[];
@@ -13,21 +13,24 @@ interface BookGridProps {
 }
 
 const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('All');
-  const [sortBy, setSortBy] = useState('title');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [sortBy, setSortBy] = useState("title");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [featuredCarouselIndex, setFeaturedCarouselIndex] = useState(0);
 
   // Memoize featured books to prevent re-calculation on every render
-  const featuredBooks = useMemo(() => books.filter(book => book.featured), [books]);
+  const featuredBooks = useMemo(
+    () => books.filter((book) => book.featured),
+    [books]
+  );
 
   // Carousel settings for featured books
   const booksPerPage = 4;
   const totalFeaturedPages = Math.ceil(featuredBooks.length / booksPerPage);
-  
+
   // Get current featured books to display
   const currentFeaturedBooks = useMemo(() => {
     const startIndex = featuredCarouselIndex * booksPerPage;
@@ -37,13 +40,13 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
   // Carousel navigation functions
   const goToPreviousFeatured = () => {
-    setFeaturedCarouselIndex(prev => 
+    setFeaturedCarouselIndex((prev) =>
       prev === 0 ? totalFeaturedPages - 1 : prev - 1
     );
   };
 
   const goToNextFeatured = () => {
-    setFeaturedCarouselIndex(prev => 
+    setFeaturedCarouselIndex((prev) =>
       prev === totalFeaturedPages - 1 ? 0 : prev + 1
     );
   };
@@ -54,20 +57,20 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
   // Get all unique genres for the filter dropdown
   const genres = useMemo(() => {
-    const allGenres = books.flatMap(book => book.genre);
-    return ['All', ...new Set(allGenres)];
+    const allGenres = books.flatMap((book) => book.genre);
+    return ["All", ...new Set(allGenres)];
   }, [books]);
 
   // Filter and sort books based on search query, selected genre, and sorting options
   const filteredAndSortedBooks = useMemo(() => {
     // First filter the books
-    const filtered = books.filter(book => {
-      const matchesSearch = 
+    const filtered = books.filter((book) => {
+      const matchesSearch =
         book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         book.author.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesGenre = 
-        selectedGenre === 'All' || book.genre.includes(selectedGenre);
+
+      const matchesGenre =
+        selectedGenre === "All" || book.genre.includes(selectedGenre);
 
       return matchesSearch && matchesGenre;
     });
@@ -77,29 +80,31 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
       let comparison = 0;
 
       switch (sortBy) {
-        case 'title':
+        case "title":
           comparison = a.title.localeCompare(b.title);
           break;
-        case 'author':
+        case "author":
           comparison = a.author.localeCompare(b.author);
           break;
-        case 'datePublished':
-          comparison = new Date(a.datePublished).getTime() - new Date(b.datePublished).getTime();
+        case "datePublished":
+          comparison =
+            new Date(a.datePublished).getTime() -
+            new Date(b.datePublished).getTime();
           break;
-        case 'rating':
+        case "rating":
           comparison = a.rating - b.rating;
           break;
-        case 'reviewCount':
+        case "reviewCount":
           comparison = a.reviewCount - b.reviewCount;
           break;
-        case 'price':
+        case "price":
           comparison = a.price - b.price;
           break;
         default:
           comparison = 0;
       }
 
-      return sortOrder === 'asc' ? comparison : -comparison;
+      return sortOrder === "asc" ? comparison : -comparison;
     });
 
     return sorted;
@@ -145,15 +150,15 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
                     key={index}
                     onClick={() => goToFeaturedPage(index)}
                     className={`w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer ${
-                      index === featuredCarouselIndex 
-                        ? 'bg-blue-600' 
-                        : 'bg-gray-300 hover:bg-gray-400'
+                      index === featuredCarouselIndex
+                        ? "bg-purple-600"
+                        : "bg-purple-100 hover:bg-purple-200"
                     }`}
                     aria-label={`Go to featured books page ${index + 1}`}
                   />
                 ))}
               </div>
-              
+
               {/* Navigation Buttons */}
               <div className="flex gap-2">
                 <button
@@ -161,8 +166,18 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
                   className="p-2 rounded-full bg-white border border-gray-300 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
                   aria-label="Previous featured books"
                 >
-                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <svg
+                    className="w-4 h-4 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                 </button>
                 <button
@@ -170,27 +185,42 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
                   className="p-2 rounded-full bg-white border border-gray-300 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
                   aria-label="Next featured books"
                 >
-                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-4 h-4 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
               </div>
             </div>
           )}
         </div>
-        
+
         {/* Featured Books Carousel */}
         <div className="relative">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {currentFeaturedBooks.map(book => (
+            {currentFeaturedBooks.map((book) => (
               <BookCard key={book.id} book={book} onAddToCart={onAddToCart} />
             ))}
           </div>
-          
+
           {/* Show current page info */}
           {totalFeaturedPages > 1 && (
             <div className="text-center mt-4 text-sm text-gray-600">
-              Showing {featuredCarouselIndex * booksPerPage + 1} - {Math.min((featuredCarouselIndex + 1) * booksPerPage, featuredBooks.length)} of {featuredBooks.length} featured books
+              Showing {featuredCarouselIndex * booksPerPage + 1} -{" "}
+              {Math.min(
+                (featuredCarouselIndex + 1) * booksPerPage,
+                featuredBooks.length
+              )}{" "}
+              of {featuredBooks.length} featured books
             </div>
           )}
         </div>
@@ -206,21 +236,26 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
               placeholder="Search by title or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div className="w-full md:w-1/4">
-            <label htmlFor="genreFilter" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="genreFilter"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Filter by Genre:
             </label>
             <select
               id="genreFilter"
               value={selectedGenre}
               onChange={(e) => setSelectedGenre(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
             >
-              {genres.map(genre => (
-                <option key={genre} value={genre}>{genre}</option>
+              {genres.map((genre) => (
+                <option key={genre} value={genre}>
+                  {genre}
+                </option>
               ))}
             </select>
           </div>
@@ -234,14 +269,17 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
           <div className="flex items-center gap-4">
             {/* Sort By Dropdown */}
             <div className="flex items-center gap-2">
-              <label htmlFor="sortBy" className="text-sm text-gray-600 whitespace-nowrap">
+              <label
+                htmlFor="sortBy"
+                className="text-sm text-gray-600 whitespace-nowrap"
+              >
                 Sort by:
               </label>
               <select
                 id="sortBy"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-sm"
               >
                 <option value="title">Title</option>
                 <option value="author">Author</option>
@@ -254,21 +292,43 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
             {/* Sort Order Toggle */}
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer"
-              aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+              className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm cursor-pointer"
+              aria-label={`Sort ${
+                sortOrder === "asc" ? "descending" : "ascending"
+              }`}
             >
-              {sortOrder === 'asc' ? (
+              {sortOrder === "asc" ? (
                 <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 15l7-7 7 7"
+                    />
                   </svg>
                   <span>Asc</span>
                 </>
               ) : (
                 <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                   <span>Desc</span>
                 </>
@@ -284,11 +344,15 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
         {filteredAndSortedBooks.length > 0 ? (
           <>
             <div className="space-y-3">
-              {paginatedBooks.map(book => (
-                <BookListItem key={book.id} book={book} onAddToCart={onAddToCart} />
+              {paginatedBooks.map((book) => (
+                <BookListItem
+                  key={book.id}
+                  book={book}
+                  onAddToCart={onAddToCart}
+                />
               ))}
             </div>
-            
+
             {/* Pagination */}
             <Pagination
               currentPage={currentPage}
@@ -299,7 +363,9 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
             />
           </>
         ) : (
-          <p className="text-center text-gray-500 text-lg">No books found matching your criteria.</p>
+          <p className="text-center text-gray-500 text-lg">
+            No books found matching your criteria.
+          </p>
         )}
       </section>
     </div>
