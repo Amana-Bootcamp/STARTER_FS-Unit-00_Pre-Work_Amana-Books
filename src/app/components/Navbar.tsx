@@ -3,72 +3,75 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { useState, useEffect } from "react";
 import { CartItem } from "../types";
+
+const getCartItemCount = (): number => {
+  try {
+    const storedCart = localStorage.getItem("cart");
+    if (!storedCart) return 0;
+    const cart: CartItem[] = JSON.parse(storedCart);
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  } catch (error) {
+    console.error("Failed to parse cart from localStorage", error);
+    return 0;
+  }
+};
+
+const classNames = (...classes: string[]) => classes.filter(Boolean).join(" ");
 
 const Navbar: React.FC = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
-    // This function updates the cart count from localStorage.
-    // It's designed to run on the client side only.
-    const updateCartCount = () => {
-      const storedCart = localStorage.getItem("cart");
-      if (storedCart) {
-        try {
-          const cart: CartItem[] = JSON.parse(storedCart);
-          const count = cart.reduce((total, item) => total + item.quantity, 0);
-          setCartItemCount(count);
-        } catch (error) {
-          console.error("Failed to parse cart from localStorage", error);
-          setCartItemCount(0);
-        }
-      } else {
-        setCartItemCount(0);
-      }
-    };
+    const updateCartCount = () => setCartItemCount(getCartItemCount());
 
-    // Initial update
     updateCartCount();
-
-    // Listen for custom event to update cart count
     window.addEventListener("cartUpdated", updateCartCount);
 
-    // Clean up the event listener
     return () => {
       window.removeEventListener("cartUpdated", updateCartCount);
     };
   }, []);
 
   return (
-    <nav className="bg-white shadow-md fixed w-full top-0 z-10">
+    <nav className="bg-white/80 backdrop-blur-md shadow-md fixed w-full top-0 z-10 transition-all duration-300">
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+        {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold text-gray-800 cursor-pointer"
+          className="text-2xl font-bold text-gray-800 cursor-pointer transform transition-transform duration-200 hover:scale-105"
         >
           Amana Bookstore
         </Link>
-        <div className="flex items-center space-x-4">
+
+        {/* Links */}
+        <div className="flex items-center space-x-6">
           <Link
             href="/"
-            className={`text-gray-600 hover:text-purple-500 cursor-pointer ${
-              pathname === "/" ? "text-purple-500 font-semibold" : ""
-            }`}
+            className={classNames(
+              "relative text-gray-600 hover:text-purple-500 transition-colors duration-200 cursor-pointer after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full",
+              pathname === "/"
+                ? "text-purple-500 font-semibold after:w-full"
+                : ""
+            )}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             Home
           </Link>
+
           <Link
             href="/cart"
-            className={`text-gray-600 hover:text-purple-500 flex items-center cursor-pointer ${
+            aria-label={`Cart with ${cartItemCount} items`}
+            className={classNames(
+              "text-gray-600 hover:text-purple-500 flex items-center transition-colors duration-200 cursor-pointer",
               pathname === "/cart" ? "text-purple-500 font-semibold" : ""
-            }`}
+            )}
           >
             My Cart
             {cartItemCount > 0 && (
-              <span className="ml-2 bg-purple-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="ml-2 bg-purple-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform transition-transform duration-200 animate-pulse">
                 {cartItemCount}
               </span>
             )}
