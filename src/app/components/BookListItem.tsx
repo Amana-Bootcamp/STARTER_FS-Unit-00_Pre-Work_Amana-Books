@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Book } from "../types";
+import Image from "next/image";
 
 interface BookListItemProps {
   book: Book;
@@ -102,7 +103,15 @@ const BookListItem: React.FC<BookListItemProps> = ({ book, onAddToCart }) => {
           className="flex-shrink-0 cursor-pointer"
         >
           <div className="w-16 h-20 bg-purple-100 rounded-md flex items-center justify-center hover:bg-purple-200 transition-colors duration-200">
-            <div className="text-2xl text-gray-400">📚</div>
+            <div className="text-2xl text-gray-400">
+              <Image
+                src="/bookIcon.svg"
+                alt="Book Icon"
+                width={40} // adjust size
+                height={40} // adjust size
+                className="text-gray-400"
+              />
+            </div>
           </div>
         </Link>
 

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { books } from "../../data/books";
 import { reviews } from "../../data/reviews";
 import { Book, CartItem, Review } from "../../types";
+import Image from "next/image";
 
 export default function BookDetailPage() {
   const [book, setBook] = useState<Book | null>(null);
@@ -157,7 +158,16 @@ export default function BookDetailPage() {
         {/* Book Image */}
         <div className="relative h-96 md:h-[600px] w-full shadow-lg rounded-lg overflow-hidden bg-purple-200 flex items-center justify-center">
           {/* Book Icon Placeholder */}
-          <div className="text-8xl text-gray-400">📚</div>
+          <div className="text-8xl text-gray-400">
+            {" "}
+            <Image
+              src="/bookIcon.svg"
+              alt="Book Icon"
+              width={500} // adjust size
+              height={500} // adjust size
+              className="text-gray-400"
+            />
+          </div>
         </div>
 
         {/* Book Details */}

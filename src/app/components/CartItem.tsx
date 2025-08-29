@@ -4,6 +4,7 @@
 import React from "react";
 import Link from "next/link";
 import { Book } from "../types";
+import Image from "next/image";
 
 interface CartItemProps {
   item: { book: Book; quantity: number };
@@ -26,7 +27,15 @@ const CartItem: React.FC<CartItemProps> = ({
       <div className="flex items-center space-x-4">
         <div className="relative h-24 w-16 bg-gray-200 flex items-center justify-center rounded-md">
           {/* Book Icon Placeholder */}
-          <div className="text-2xl text-gray-400">📚</div>
+          <div className="text-2xl text-gray-400">
+            <Image
+              src="/bookIcon.svg"
+              alt="Book Icon"
+              width={64} // adjust size
+              height={64} // adjust size
+              className="text-gray-400"
+            />
+          </div>
         </div>
         <div>
           <Link
